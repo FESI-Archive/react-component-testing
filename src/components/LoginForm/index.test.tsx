@@ -68,4 +68,24 @@ describe('LoginForm 컴포넌트 테스트', () => {
       expect(errorMessage).not.toBeInTheDocument();
     });
   });
+
+  describe('로그인 버튼 클릭', () => {
+    test('로그인 버튼 클릭 시 모달창이 나타나는지 확인', async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ message: '로그인 성공' }),
+      });
+
+      // 이메일과 비밀번호 입력
+      fireEvent.change(emailInput, { target: { value: 'test@example.com' } });
+      fireEvent.change(passwordInput, { target: { value: 'password' } });
+
+      // 로그인 버튼 클릭
+      fireEvent.click(loginButton);
+
+      // 모달창이 나타나는지 확인
+      const modal = await screen.findByText('로그인 성공');
+      expect(modal).toBeInTheDocument();
+    });
+  });
 });

@@ -22,7 +22,7 @@ export const SignupForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // 회원가입 로직 처리
-    console.log('회원가입!');
+    alert(`${values.email}님 반갑습니다.`);
   };
 
   return (

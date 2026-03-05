@@ -42,18 +42,24 @@ test('회원가입 버튼 렌더링 확인', () => {
   expect(submitButton).toBeInTheDocument();
 });
 
-test('회원가입 버튼을 클릭하면 콘솔로그가 출력되는지 확인', () => {
+test('회원가입 버튼을 클릭하면 alert가 호출되는지 확인', () => {
+  const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
   render(<SignupForm />);
 
-  const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+  fireEvent.change(screen.getByLabelText('이메일'), {
+    target: { value: 'test@example.com' },
+  });
+  fireEvent.change(screen.getByLabelText('비밀번호'), {
+    target: { value: '1234' },
+  });
+  fireEvent.change(screen.getByLabelText('비밀번호 확인'), {
+    target: { value: '1234' },
+  });
 
-  // 회원가입 버튼 가져오기 및 클릭
-  const signupForm = screen.getByRole('form');
-  fireEvent.submit(signupForm);
+  fireEvent.submit(screen.getByRole('form'));
 
-  // 회원가입 버튼 클릭 시 콘솔에 "회원가입!" 메시지가 출력되는지 확인
-  expect(consoleSpy).toHaveBeenCalledWith('회원가입!');
+  expect(alertSpy).toHaveBeenCalledWith('test@example.com님 반갑습니다.');
 
-  // jest.spyOn()으로 생성된 스파이(spy)를 원래 구현(original implementation)으로 완전히 복원하는 역할
-  consoleSpy.mockRestore();
+  alertSpy.mockRestore();
 });
